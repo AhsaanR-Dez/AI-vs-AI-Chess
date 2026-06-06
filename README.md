@@ -20,7 +20,6 @@ https://your-username.github.io/your-repo/
 - Skill rises over the session, so the play visibly improves the longer you watch.
 - Speed slider from about 0.7 up to 100 moves per second.
 - Think-time slider to set how long each engine searches (more time, deeper search, stronger play).
-- CPU threads slider that runs the search across multiple cores using Web Workers.
 - Play / Pause, Step (one move at a time), New game (keeps the learning), Reset training (back to clueless).
 - Last move is highlighted, a king in check glows red, captured pieces show on each name plate.
 - Rating bar, tier labels (Beginner up to Grandmaster), and a sparkline of the rating over time.
@@ -55,15 +54,11 @@ Plain HTML, CSS, and JavaScript in one file. No frameworks, no external librarie
 
 ## Using your CPU
 
-The whole thing runs on your machine. There is no server, so all the search work happens on your local CPU.
+The whole thing runs on your machine. There is no server, so all the search work happens on your local CPU. The search-speed readout (in thousands of positions per second) shows how hard it is working.
 
-By default it spreads the search across your cores using Web Workers. It detects how many cores you have and spawns that many workers. Each worker searches a different share of the opening moves (this is called root splitting) and the best result wins. The CPU threads slider lets you pick how many cores to use, and the search-speed readout (in thousands of nodes per second) goes up as you add threads, so you can see the cores working.
+It runs on a single core. Spreading the search across multiple cores needs Web Workers, which work on GitHub Pages and as a local file but get blocked in some sandboxed preview windows. 
 
-The speedup is not perfectly linear, because alpha-beta search does not parallelize cleanly. But it does use the whole chip and search more in the same wall-clock time.
-
-If Web Workers are blocked (some sandboxed previews do this), it falls back to a single thread on the main thread and shows the thread count as `1*`. It still works, it just uses one core and may pause briefly during a long think. On GitHub Pages and when opened as a local file, you get the full multi-core behavior.
-
-
+## Speed note
 
 The slider sets the scheduled rate. Low-skill games hit the full speed because a blundering engine picks a move instantly. Once skill is high, a single search takes longer, so the real rate caps around 12 to 20 moves per second no matter what the slider says. At very high speeds the slide animation can't keep up and pieces snap to their squares instead of gliding.
 
